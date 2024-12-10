@@ -1,0 +1,55 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Изучить TypeScript",
+      "description": "Пройти базовый курс по TypeScript, понять основные типы и утилиты.",
+      "priority": "high",
+      "status": "in-progress",
+      "dueDate": "2024-12-20T23:59:59Z",
+      "createdAt": "2024-12-10T09:00:00Z",
+      "updatedAt": "2024-12-10T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Настроить линтинг и форматирование",
+      "description": "Установить и настроить ESLint, Prettier для единообразного стиля кода.",
+      "priority": "medium",
+      "status": "todo",
+      "dueDate": "2024-12-15T23:59:59Z",
+      "createdAt": "2024-12-10T09:15:00Z",
+      "updatedAt": "2024-12-10T09:15:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Разработать компонент TaskList",
+      "description": "Создать компонент для отображения списка задач, интегрировать с Redux.",
+      "priority": "high",
+      "status": "todo",
+      "dueDate": "2024-12-25T23:59:59Z",
+      "createdAt": "2024-12-10T09:30:00Z",
+      "updatedAt": "2024-12-10T09:30:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Написать тесты для TaskItem",
+      "description": "Использовать React Testing Library и Jest для тестирования отдельных компонентов.",
+      "priority": "low",
+      "status": "todo",
+      "dueDate": "2024-12-30T23:59:59Z",
+      "createdAt": "2024-12-10T10:00:00Z",
+      "updatedAt": "2024-12-10T10:00:00Z"
+    },
+    {
+      "id": 5,
+      "title": "Добавить фильтрацию задач",
+      "description": "Реализовать функцию фильтрации задач по статусу и приоритету.",
+      "priority": "medium",
+      "status": "in-progress",
+      "dueDate": "2024-12-18T23:59:59Z",
+      "createdAt": "2024-12-10T10:30:00Z",
+      "updatedAt": "2024-12-10T11:00:00Z"
+    }
+  ]
+}
+  

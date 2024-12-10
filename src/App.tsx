@@ -1,25 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useAppSelector, useAppDispatch } from "./app/hooks";
+import { setTasks } from "./features/tasks/taskSlice";
 
 function App() {
+
+  const myDate = useAppSelector(state => state.tasks.tasks);
+  console.log(myDate);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <div>Hello world</div>
-      </header>
+      
     </div>
   );
 }
