@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Task } from './types';
-import { fetchTasksFromApi, createTaskApi, updateTaskApi, deleteTaskApi } from "./api/tasksApi";
+import { fetchTasksFromApi, createTaskApi, updateTaskApi, removeTaskApi } from "./api/tasksApi";
+import { createAsyncThunkForApi } from "./createAsyncThunkForApi";
 
 interface TasksState {
     tasks: Task[];
@@ -14,43 +15,44 @@ const initialState: TasksState = {
     error: null
 };
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-    const tasks = await fetchTasksFromApi();
-    return tasks;
-});
-
-export const addNewTask = createAsyncThunk('tasks/addNewTask', async (task: Task) => {
-    const createdTask = await createTaskApi(task);
-    return createdTask;
-});
-
-export const updateExistingTask = createAsyncThunk('tasks/updateTask', async (task: Task) => {
-    const updatedTask = await updateTaskApi(task);
-    return updatedTask;
-});
-
-export const removeExistingTask = createAsyncThunk('tasks/removeTask', async (taskId: number) => {
-    await deleteTaskApi(taskId);
-    return taskId;
-});
+export const fetchTasks = createAsyncThunkForApi<Task[], void>('tasks/fetchTasks', fetchTasksFromApi);
+export const addNewTask = createAsyncThunkForApi<Task, Task>('tasks/addNewTask', createTaskApi);
+export const updateExistingTask = createAsyncThunkForApi<Task, Task>('tasks/updateTask', updateTaskApi);
+export const removeExistingTask = createAsyncThunkForApi<number, number>('tasks/removeTask', removeTaskApi);
 
 const taskSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        addTask: (state, action: PayloadAction<Task>) => {
+        addTask: (
+            state, 
+            action: PayloadAction<Task>
+        ) => {
             state.tasks.push(action.payload);
         },
-        updateTask: (state, action: PayloadAction<Task>) => {
-            const index = state.tasks.findIndex(task => task.id === action.payload.id);
+        updateTask: (
+            state, 
+            action: PayloadAction<Task>
+        ) => {
+            const index = state.tasks.findIndex(
+                task => task.id === action.payload.id
+            );
             if(index !== -1) {
                 state.tasks[index] = action.payload;
             }
         },
-        removeTask: (state, action: PayloadAction<number>) => {
-            state.tasks = state.tasks.filter(task => task.id !== action.payload);
+        removeTask: (
+            state, 
+            action: PayloadAction<number>
+        ) => {
+            state.tasks = state.tasks.filter(
+                task => task.id !== action.payload
+            );
         },
-        setTasks: (state, action: PayloadAction<Task[]>) => {
+        setTasks: (
+            state, 
+            action: PayloadAction<Task[]>
+        ) => {
             state.tasks = action.payload;
         }
     },
@@ -60,52 +62,67 @@ const taskSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
+            .addCase(fetchTasks.fulfilled, 
+                    (state, action: PayloadAction<Task[]>) => {
                 state.loading = false;
                 state.tasks = action.payload; 
             })
-            .addCase(fetchTasks.rejected, (state, action) => {
+            .addCase(fetchTasks.rejected, 
+                    (state, action) => {
                 state.loading = false;
                 state.error = action.error.message ?? 'Failed to load tasks';
             })
         builder
-        .addCase(addNewTask.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(addNewTask.fulfilled, (state, action: PayloadAction<Task>) => {
-            state.loading = false;
-            state.tasks.push(action.payload);
-        })
-        .addCase(addNewTask.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message ?? 'Failed to add task'
-        })
-
-        builder
-            .addCase(updateExistingTask.pending, (state) => {
+            .addCase(addNewTask.pending, 
+                    (state) => {
                 state.loading = true;
             })
-            .addCase(updateExistingTask.fulfilled, (state, action: PayloadAction<Task> ) => {
+            .addCase(addNewTask.fulfilled, 
+                    (state, action: PayloadAction<Task>) => {
                 state.loading = false;
-                const index = state.tasks.findIndex(t => t.id === action.payload.id);
+                state.tasks.push(action.payload);
+            })
+            .addCase(addNewTask.rejected, 
+                    (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? 'Failed to add task'
+            })
+
+        builder
+            .addCase(updateExistingTask.pending, 
+                    (state) => {
+                state.loading = true;
+            })
+            .addCase(updateExistingTask.fulfilled, 
+                    (state, action: PayloadAction<Task>) => {
+                state.loading = false;
+                const index = state.tasks.findIndex(
+                    t => t.id === action.payload.id
+                );
                 if(index !== -1) {
                     state.tasks[index] = action.payload;
                 }
             })
-            .addCase(updateExistingTask.rejected, (state, action) => {
+            .addCase(updateExistingTask.rejected, 
+                    (state, action) => {
                 state.loading = false;
                 state.error = action.error.message ?? 'Failed to update task';
               });
 
         builder
-            .addCase(removeExistingTask.pending, (state) => {
+            .addCase(removeExistingTask.pending, 
+                    (state) => {
                 state.loading = true;
             })
-            .addCase(removeExistingTask.fulfilled, (state, action:PayloadAction<number> ) => {
+            .addCase(removeExistingTask.fulfilled, 
+                    (state, action:PayloadAction<number>) => {
                 state.loading = false;
-                state.tasks = state.tasks.filter(task => task.id !== action.payload);
+                state.tasks = state.tasks.filter(
+                    task => task.id !== action.payload
+                );
             })
-            .addCase(removeExistingTask.rejected, (state, action) => {
+            .addCase(removeExistingTask.rejected, 
+                    (state, action) => {
                 state.loading = false;
                 state.error = action.error.message ?? 'Failed to remove task';
               });

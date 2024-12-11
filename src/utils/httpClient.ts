@@ -1,4 +1,4 @@
-export const useHttp = () => {
+export const httpClient = () => {
     const request = async (
         url: string,
         method = 'GET',

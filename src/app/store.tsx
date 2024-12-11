@@ -1,10 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import taskReduser from '../features/tasks/taskSlice';
+import { rootReducer } from './reducers';
+import { myLogger } from './middleware/myLogger';
+
+const devMode = process.env.NODE_ENV !== 'production';
 
 export const store = configureStore({
-    reducer: {
-        tasks: taskReduser
-    }
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => 
+        getDefaultMiddleware()
+            .concat(myLogger), 
+    devTools: devMode,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

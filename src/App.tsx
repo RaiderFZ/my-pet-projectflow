@@ -1,5 +1,5 @@
-import { useAppSelector, useAppDispatch } from "./app/hooks";
-import { setTasks } from "./features/tasks/taskSlice";
+import { useAppSelector } from "./app/hooks";
+
 
 function App() {
 
