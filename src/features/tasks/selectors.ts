@@ -4,16 +4,12 @@ import { Task } from "./types";
 
 const selectTasksState = (state: RootState) => state.tasks.tasks;
 
-export const selectAllTasks = createSelector(
-    [selectTasksState],
-    (tasks) => tasks
-);
+export const selectAllTasks = (state: RootState) => state.tasks.tasks;
 
-export const selectTaskByStatus = (status: Task['status']) => 
-    createSelector(
-        [selectTasksState],
-        (tasks) => tasks.filter((task) => task.status === status)
-    );
+export const selectTaskByStatus = createSelector(
+    [selectTasksState, (_: RootState, status: Task['status']) => status],
+    (tasks, status) => tasks.filter((task) => task.status === status)
+);
 
 export const selectByPriority = (priority: Task['priority']) => 
     createSelector(
@@ -29,10 +25,16 @@ export const selectOverdueTasks = createSelector(
     }
 );
 
-export const selectTaskByDateRange = (startDate: string, endDate: string) => {
-    createSelector(
-        [selectTasksState],
-        (tasks) => 
-            tasks.filter((task) => task.dueData >= startDate && task.dueData <= endDate)
-    );
-}
+export const selectTaskByDateRange = createSelector(
+    [
+        selectTasksState,
+        (_: RootState, startDate: string) => startDate,
+        (_: RootState, __: string, endDate: string) => endDate
+    ],
+    (tasks, startDate, endDate) =>
+        tasks.filter(
+            (task) =>
+                new Date(task.dueData) >= new Date(startDate) &&
+                new Date(task.dueData) <= new Date(endDate)
+        )
+);
